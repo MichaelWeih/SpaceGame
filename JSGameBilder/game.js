@@ -1,4 +1,3 @@
-let KEY_SPACE = false; //32
 let KEY_UP = false; //38
 let KEY_DOWN = false; // 40
 let KEY_RIGHT = false; // 40
@@ -17,8 +16,9 @@ let createBulletsVar;
 let updateUfoSpawnVar;
 let updateSpeedIndicator = 0;
 let ufoSpeed = 5;
+let createInvertedUfosVar;
+let createInvertedBulletsVar;
 document.cookie = "username=Michi";
-let invertedUfos = [];
 
 let rocket = {
     x: 100,
@@ -45,7 +45,7 @@ let invertedUfo = {
     src: 'ufo.png',
     img: new Image()
 };
-
+let invertedUfos = [];
 let ufos = [];
 
 let bullets = [];
@@ -57,9 +57,6 @@ let ammo = {
 
 document.onkeydown = function(e){
     console.log(e.keyCode)
-    if(e.keyCode == 32){ //Leertaste gedrückt
-        KEY_SPACE = true;
-    }
 
     if(e.keyCode == 69){
         KEY_E = true;
@@ -87,9 +84,6 @@ document.onkeydown = function(e){
 }
 
 document.onkeyup = function(e){
-    if(e.keyCode == 32 && !rocket.hit){
-        KEY_SPACE = false;
-    }
 
     if(e.keyCode == 69 && !rocket.hit){
         KEY_E = false;
@@ -125,16 +119,22 @@ function startGame(){
     createUfoVar = setInterval(function(){createUfos(700); } , 5000);
     checkForCollisionVar = setInterval(checkForCollision, 5000 / 25);
     createBulletsVar = setInterval(createBullets, 1000 / 10);
+    createInvertedBulletsVar = setInterval(createInvertedBullets, 1000 / 10);
     updateUfoSpawnVar = setInterval(updateUfoSpawn, 1000 / 25);
     draw();
 }
 
 function checkForCollision(){
     ufos.forEach(function(ufo){
-        if(!ufo.hit && rocket.x + rocket.width > ufo.x 
-        && rocket.y + rocket.height > ufo.y 
+        if(!ufo.hit 
+        && rocket.x + rocket.width > ufo.x 
+        && rocket.y + rocket.height > ufo.y
         && rocket.x < ufo.x 
-        && rocket.y < ufo.y){
+        && rocket.y < ufo.y
+        || ufo.x + ufo.width > rocket.x
+        && ufo.y + ufo.height > rocket.y
+        && ufo.x < rocket.x 
+        && ufo.y < rocket.y){
             rocket.img.src = 'explosion.png';
             rocket.hit = true;
             console.log('Collision!');
@@ -142,7 +142,8 @@ function checkForCollision(){
         }
         
         bullets.forEach(function(bullet){
-            if(!ufo.hit && bullet.x + bullet.width > ufo.x
+            if(!ufo.hit 
+            && bullet.x + bullet.width > ufo.x
             && bullet.y + bullet.height > ufo.y
             && bullet.x < ufo.x
             && bullet.y < ufo.y + ufo.height)
@@ -162,45 +163,73 @@ function checkForCollision(){
             }
         });
     });  
+
+    invertedUfos.forEach(function(invertedUfo){
+        if(!invertedUfo.hit && rocket.x + rocket.width < invertedUfo.x 
+        && rocket.y + rocket.height < invertedUfo.y 
+        && rocket.x > invertedUfo.x 
+        && rocket.y > invertedUfo.y){
+            rocket.img.src = 'explosion.png';
+            rocket.hit = true;
+            console.log('Collision!');
+            invertedUfos = invertedUfos.filter(u => u != invertedUfo);
+        }
+
+        invertedBullets.forEach(function(invertedBullet){
+            if(!invertedUfo.hit && invertedBullet.x + invertedBullet.width > invertedUfo.x
+            && invertedBullet.y + invertedBullet.height < invertedUfo.y
+            && invertedBullet.x > invertedUfo.x
+            && invertedBullet.y > invertedUfo.y + invertedUfo.height)
+            {
+                resetAmmo();
+                invertedUfo.hit = true;
+                invertedUfo.img.src = 'explosion.png';
+                console.log('DEFEATED!');
+                
+                score += 1;
+                updateSpeedIndicator += 1;
+                document.getElementById('scoreText').innerHTML = score;
+
+                setTimeout(() => {
+                    invertedUfo = invertedUfo.filter(u => u != invertedUfo); 
+                }, 2000);
+            }
+        });
+    });
 }
 
 function createBullets(){
-    if  (KEY_E && !rocket.hit || KEY_Q && !rocket.hit)  {
-        let bullet = {
-            x: rocket.x + 80,
-            y: rocket.y + 22,
-            width: 40,
-            height: 10,
-            src: 'bullet.png',
-            img: new Image()
-        };
-        bullet.img.src = bullet.src;
-        bullets.push(bullet);
-
-        let invertedBullet = {
-            x: rocket.x /*+ 110*/,
-            y: rocket.y /*+ 22*/,
-            width: 40,
-            height: 10,
-            src: 'bullet.png',
-            img: new Image()
-        };
-        invertedBullet.img.src = invertedBullet.src;
-        invertedBullets.push(invertedBullet);
+    if(isKEY_E){
+        if  (KEY_E && !rocket.hit)  {
+            let bullet = {
+                x: rocket.x + 80,
+                y: rocket.y + 22,
+                width: 40,
+                height: 10,
+                src: 'bullet.png',
+                img: new Image()
+            };
+            bullet.img.src = bullet.src;
+            bullets.push(bullet);
+        }
     }
 }
 
 function createInvertedBullets(){
-    let invertedBullet = {
-        x: rocket.x + 110,
-        y: rocket.y + 22,
-        width: 40,
-        height: 10,
-        src: 'bullet.png',
-        img: new Image()
-    };
-    invertedBullet.img.src = invertedBullet.src;
-    invertedBullets.push(invertedBullet);
+    if(isKEY_Q){
+        if  (KEY_Q && !rocket.hit){
+            let invertedBullet = {
+                x: rocket.x - 80,
+                y: rocket.y + 22,
+                width: 40,
+                height: 10,
+                src: 'bullet.png',
+                img: new Image()
+            };
+            invertedBullet.img.src = invertedBullet.src;
+            invertedBullets.push(invertedBullet);
+        }
+    }
 }
 
 function createUfos(_xValue){
@@ -218,7 +247,7 @@ function createUfos(_xValue){
 
 function createInvertedUfos(){
     let invertedUfo = {
-        x: 200,
+        x: -100,
         y: Math.floor(Math.random() * 305),
         width: 120,
         height: 60,
@@ -229,6 +258,7 @@ function createInvertedUfos(){
     invertedUfos.push(invertedUfo);
 }
 
+let invertUfoIntervallSet;
 function updateUfoSpawn(){
     if(updateSpeedIndicator == 3){
             updateSpeedIndicator = 0;
@@ -236,17 +266,34 @@ function updateUfoSpawn(){
         } 
 
     if(score >= 10){
-        setInterval(createInvertedUfos, 5000);
+        if(!invertUfoIntervallSet){
+            invertUfoIntervallSet = true;
+            createInvertedUfosVar = setInterval(createInvertedUfos, 5000);
+        }
     }
 } 
 
+let isKEY_E = false;
+let isKEY_Q = false;
 function update(){
-    if(KEY_Q || KEY_E){
+    if(KEY_E){
+        isKEY_E = true;
+        isKEY_Q = false;
         if(ammo != 0){
             ammo.currentMag -= 1;
         }
         document.getElementById('ammo').innerHTML = `${ammo.currentMag}`;
     }
+
+    if(KEY_Q){
+        isKEY_Q = true;
+        isKEY_E = false;
+        if(ammo != 0){
+            ammo.currentMag -= 1;
+        }
+
+        document.getElementById('ammo').innerHTML = `${ammo.currentMag}`;
+    };
 
     if(ammo.currentMag == 0 && !rocket.defeated){
         SetGameOver();              
@@ -274,18 +321,18 @@ function update(){
     }
 
     else if(KEY_LEFT){
-        rocket.x -= 4; 
+        rocket.x -= 7; 
     }
 
     bullets.forEach(function(bullet){
             if(!ufo.hit){
                 bullet.x += 10;
             }
-        });
+    });
 
     invertedBullets.forEach(function(invertedBullet){
-        if(!ufo.hit){
-            invertedBullet.x -= 10;
+            if(!invertedUfo.hit){
+                invertedBullet.x -= 10;
         }
     });
 
@@ -306,6 +353,7 @@ function SetGameOver(){
     stopMovingRocket();
     ClearAllIntervals();
     
+    invertUfoIntervallSet = false;
     document.getElementById('scoreText').innerHTML = `${score}`;
     rocket.defeated = true;
         document.getElementById('HighScoreTable').innerHTML += 
@@ -327,7 +375,6 @@ function SetGameOver(){
 }
 
 function stopMovingRocket(){
-    KEY_SPACE = false;
     KEY_UP = false;
     KEY_RIGHT = false;
     KEY_LEFT = false;
@@ -342,6 +389,8 @@ function ClearAllIntervals(){
     clearInterval(checkForCollisionVar);
     clearInterval(createBulletsVar);
     clearInterval(updateUfoSpawnVar);
+    clearInterval(createInvertedUfosVar);
+    clearInterval(createInvertedBulletsVar);
 }
 
 function restartGame(){
@@ -381,13 +430,13 @@ function draw(){
         ctx.drawImage(invertedUfo.img, invertedUfo.x, invertedUfo.y, invertedUfo.width, invertedUfo.height);
     });
 
-    bullets.forEach(function(bullet){
-        ctx.drawImage(bullet.img, bullet.x, bullet.y, bullet.width, bullet.height);
-    })
+        bullets.forEach(function(bullet){
+            ctx.drawImage(bullet.img, bullet.x, bullet.y, bullet.width, bullet.height);
+        });
 
-    invertedBullets.forEach(function(bullet){
-        ctx.drawImage(bullet.img, bullet.x, bullet.y, bullet.width, bullet.height);
-    })
-
+        invertedBullets.forEach(function(invertedBullet){
+            ctx.drawImage(invertedBullet.img, invertedBullet.x, invertedBullet.y, invertedBullet.width, invertedBullet.height);
+        });
+    
     requestAnimationFrame(draw);
 }
