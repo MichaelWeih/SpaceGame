@@ -6,6 +6,10 @@ let KEY_LEFT = false; // 40
 let KEY_Q = false; // 81
 let KEY_E = false; // 69
 
+// $.getScript("my_lovely_script.js", function() {
+//     alert("Script loaded but not necessarily executed.");
+//  });
+
 
 //Background
 let canvas;
@@ -19,14 +23,21 @@ let scoreBoard = [];
 
 
 //Intervals
-let updateVar;
-let createUfoVar;
-let checkForCollisionVar;
-let createBulletsVar;
-let updateUfoSpawnVar;
-let createInvertedUfosVar;
-let createInvertedBulletsVar;
+    //Gameplay
+    let updateVar;
+    let checkForCollisionVar;
+    let updateUfoSpawnVar;
 
+    //Convertibles
+    let createUfoVar;
+    let createInvertedUfosVar;
+
+    //Guns
+    let createBulletsVar;
+    let createInvertedBulletsVar;
+
+    //Items
+    let createAmmoRefillVar;
 
 //Gamechanger
 let updateSpeedIndicator = 0;
@@ -85,9 +96,10 @@ let AmmoRefill = {
     y: 0,
     width: 80,
     height: 50,
-    src: "Images/AmmoRefill",
+    src: 'Images/ammoRefill.png',
     img: new Image()
 }
+let AmmoRefills = [];
 
 document.onkeydown = function(e){
     console.log(e.keyCode)
@@ -157,6 +169,7 @@ function startGame(){
     createBulletsVar = setInterval(createBullets, 1000 / 10);
     createInvertedBulletsVar = setInterval(createInvertedBullets, 1000 / 10);
     updateUfoSpawnVar = setInterval(updateUfoSpawn, 1000 / 25);
+    createAmmoRefillVar = setInterval(createAmmoRefill, 3000)
 
     draw();
 }
@@ -174,6 +187,7 @@ function checkForCollision(){
             console.log('Collision!');
             ufos = ufos.filter(u => u != ufo);
         }
+        
         
         bullets.forEach(function(bullet){
             if(!ufo.hit 
@@ -195,8 +209,41 @@ function checkForCollision(){
                     ufos = ufos.filter(u => u != ufo); 
                 }, 2000);
             }
+            else if(function(ufo){ 
+            !ufo.hit 
+            && ufo.x + ufo.width > rocket.x
+            && ufo.y + ufo.height > rocket.y
+            && ufo.x < rocket.x 
+            && ufo.y < rocket.y + rocket.height
+            {
+                resetAmmo();
+                ufo.hit = true;
+                ufo.img.src = 'Images/explosion.png';
+                console.log('DEFEATED!');
+                
+                score += 1;
+                updateSpeedIndicator += 1;
+                document.getElementById('scoreText').innerHTML = score;
+
+                setTimeout(() => {
+                    ufos = ufos.filter(u => u != ufo); 
+                }, 2000);
+            }
+            });
         });
     });  
+
+    AmmoRefills.forEach(function(AmmoRefill){
+        if(!AmmoRefill.isCollected
+            && rocket.x + rocket.width > AmmoRefill.x 
+            && rocket.y + rocket.height > AmmoRefill.y
+            && rocket.x < AmmoRefill.x 
+            && rocket.y < AmmoRefill.y){
+                console.log("AmmoRefill SUCCESS!")
+                AmmoRefills = AmmoRefills.filter(a => a != AmmoRefill); 
+                resetAmmo();
+        }
+    });
 
     invertedUfos.forEach(function(invertedUfo){
         if(!invertedUfo.hit
@@ -233,6 +280,20 @@ function checkForCollision(){
             }
         });
     });
+}
+
+function createAmmoRefill(){
+    let AmmoRefill = {
+        x: 700,
+        y: Math.floor(Math.random() * 305),
+        width: 40,
+        height: 80,
+        src: 'Images/ammoRefill.png',
+        img: new Image()
+    }
+    console.log("AmmoRefill out!")
+    AmmoRefill.img.src = AmmoRefill.src;
+    AmmoRefills.push(AmmoRefill);
 }
 
 function createBullets(){
@@ -374,6 +435,12 @@ function update(){
         }
     });
 
+    AmmoRefills.forEach(function(AmmoRefill){
+        if(!AmmoRefill.isCollected){
+            AmmoRefill.x -= 5;
+        }
+    });
+
     if(!rocket.defeated){
         ufos.forEach(function(ufo){
             ufo.x -= ufoSpeed;
@@ -454,6 +521,9 @@ function loadImages(){
 
     ufo.img = new Image();
     ufo.img.src = ufo.src;
+
+    AmmoRefill.img = new Image();
+    AmmoRefill.img.src = AmmoRefill.src;
 }
 
 function draw(){
@@ -468,13 +538,17 @@ function draw(){
         ctx.drawImage(invertedUfo.img, invertedUfo.x, invertedUfo.y, invertedUfo.width, invertedUfo.height);
     });
 
-        bullets.forEach(function(bullet){
-            ctx.drawImage(bullet.img, bullet.x, bullet.y, bullet.width, bullet.height);
-        });
+    bullets.forEach(function(bullet){
+        ctx.drawImage(bullet.img, bullet.x, bullet.y, bullet.width, bullet.height);
+    });
 
-        invertedBullets.forEach(function(invertedBullet){
-            ctx.drawImage(invertedBullet.img, invertedBullet.x, invertedBullet.y, invertedBullet.width, invertedBullet.height);
-        });
+    invertedBullets.forEach(function(invertedBullet){
+        ctx.drawImage(invertedBullet.img, invertedBullet.x, invertedBullet.y, invertedBullet.width, invertedBullet.height);
+    }); 
     
+    AmmoRefills.forEach(function(AmmoRefill){
+        ctx.drawImage(AmmoRefill.img, AmmoRefill.x, AmmoRefill.y, AmmoRefill.width, AmmoRefill.height);
+    });
+
     requestAnimationFrame(draw);
 }
