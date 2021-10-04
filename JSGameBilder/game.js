@@ -38,6 +38,7 @@ let ufo = {
 }
 
 let invertedUfo = {
+    hit: false,
     x: 0,
     y: 120,
     width: 120,
@@ -130,11 +131,8 @@ function checkForCollision(){
         && rocket.x + rocket.width > ufo.x 
         && rocket.y + rocket.height > ufo.y
         && rocket.x < ufo.x 
-        && rocket.y < ufo.y
-        || ufo.x + ufo.width > rocket.x
-        && ufo.y + ufo.height > rocket.y
-        && ufo.x < rocket.x 
-        && ufo.y < rocket.y){
+        && rocket.y < ufo.y)
+        {
             rocket.img.src = 'explosion.png';
             rocket.hit = true;
             console.log('Collision!');
@@ -165,21 +163,24 @@ function checkForCollision(){
     });  
 
     invertedUfos.forEach(function(invertedUfo){
-        if(!invertedUfo.hit && rocket.x + rocket.width < invertedUfo.x 
-        && rocket.y + rocket.height < invertedUfo.y 
-        && rocket.x > invertedUfo.x 
-        && rocket.y > invertedUfo.y){
-            rocket.img.src = 'explosion.png';
-            rocket.hit = true;
-            console.log('Collision!');
-            invertedUfos = invertedUfos.filter(u => u != invertedUfo);
-        }
+        if(!invertedUfo.hit
+            && invertedUfo.x + invertedUfo.width > rocket.x
+            && invertedUfo.y + invertedUfo.height > rocket.y
+            && invertedUfo.x < rocket.x 
+            && invertedUfo.y < rocket.y + rocket.height
+            ){
+                rocket.img.src = 'explosion.png';
+                rocket.hit = true;
+                console.log('Collision!');
+                ufos = ufos.filter(u => u != ufo);
+            }
 
         invertedBullets.forEach(function(invertedBullet){
-            if(!invertedUfo.hit && invertedBullet.x + invertedBullet.width > invertedUfo.x
-            && invertedBullet.y + invertedBullet.height < invertedUfo.y
-            && invertedBullet.x > invertedUfo.x
-            && invertedBullet.y > invertedUfo.y + invertedUfo.height)
+            if(!invertedUfo.hit 
+               && invertedBullet.x < invertedUfo.x + invertedUfo.width
+               && invertedBullet.y + invertedBullet.height > invertedUfo.y
+               && invertedUfo.x < invertedBullet.x
+               && invertedBullet.y < invertedUfo.y + invertedUfo.height)
             {
                 resetAmmo();
                 invertedUfo.hit = true;
