@@ -10,4 +10,4 @@ ARROWKEY LEFT: Moving left
 ARROWKEY RIGHT: Moving Right
 
 E: Shoot forward
-Q: Shott backward
+Q: Shoot backward
