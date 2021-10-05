@@ -160,7 +160,7 @@ function startGame(){
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
     document.getElementById('ammo').innerHTML = `${ammo.currentMag}`;
-    loadImages();
+    document.onload = loadImages();
     updateVar = setInterval(update, 1000 / 25);
 
     //Set Intervals
@@ -559,6 +559,7 @@ function resetAmmo(){
 
 function loadImages(){
     backgroundImage.src = 'Images/background.png';
+
     rocket.img = new Image();
     rocket.img.src = rocket.src;
 
