@@ -169,7 +169,7 @@ function startGame(){
     createBulletsVar = setInterval(createBullets, 1000 / 10);
     createInvertedBulletsVar = setInterval(createInvertedBullets, 1000 / 10);
     updateUfoSpawnVar = setInterval(updateUfoSpawn, 1000 / 25);
-    createAmmoRefillVar = setInterval(createAmmoRefill, 3000)
+    createAmmoRefillVar = setInterval(createAmmoRefill, 15000)
 
     draw();
 }
@@ -463,7 +463,7 @@ function update(){
     }
 
     else if(KEY_LEFT){
-        rocket.x -= 7; 
+        rocket.x -= 4; 
     }
 
     bullets.forEach(function(bullet){
@@ -563,10 +563,10 @@ function loadImages(){
     rocket.img = new Image();
     rocket.img.src = rocket.src;
 
-    ufo.img = new Image();
+    ufo.img = 'Images/ufo.png';
     ufo.img.src = ufo.src;
 
-    AmmoRefill.img = new Image();
+    AmmoRefill.img = 'Images/ammoRefill.png';
     AmmoRefill.img.src = AmmoRefill.src;
 }
 
