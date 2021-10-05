@@ -53,7 +53,7 @@ document.cookie = "username=Michi";
     let rocket = {
         x: 100,
         y: 200,
-        width: 60,
+        width: 150,
         height: 80,
         src: 'Images/rocket.png'
     }
