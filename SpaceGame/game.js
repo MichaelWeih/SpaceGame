@@ -10,7 +10,6 @@ let KEY_E = false; // 69
 //     alert("Script loaded but not necessarily executed.");
 //  });
 
-
 //Background
 let canvas;
 let ctx;
