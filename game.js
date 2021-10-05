@@ -188,7 +188,6 @@ function checkForCollision(){
             ufos = ufos.filter(u => u != ufo);
         }
         
-        
         bullets.forEach(function(bullet){
             if(!ufo.hit 
             && bullet.x + bullet.width > ufo.x
@@ -230,6 +229,28 @@ function checkForCollision(){
                 }, 2000);
             }
             });
+        });
+
+        invertedBullets.forEach(function(invertedBullet){
+            if(!ufo.hit 
+                && invertedBullet.x < ufo.x + ufo.width
+                && invertedBullet.y + invertedBullet.height > ufo.y
+                && ufo.x < invertedBullet.x
+                && invertedBullet.y < ufo.y + ufo.height)
+            {
+                    resetAmmo();
+                    ufo.hit = true;
+                    ufo.img.src = 'Images/explosion.png';
+                    console.log('DEFEATED!');
+                    
+                    score += 1;
+                    updateSpeedIndicator += 1;
+                    document.getElementById('scoreText').innerHTML = score;
+    
+                    setTimeout(() => {
+                        ufos = ufos.filter(u => u != ufo); 
+                    }, 2000);
+            }
         });
     });  
 
@@ -275,7 +296,29 @@ function checkForCollision(){
                 document.getElementById('scoreText').innerHTML = score;
 
                 setTimeout(() => {
-                    invertedUfo = invertedUfo.filter(u => u != invertedUfo); 
+                    invertedUfos = invertedUfos.filter(u => u != invertedUfo); 
+                }, 2000);
+            }
+        });
+
+        bullets.forEach(function(bullet){
+            if(!invertedUfo.hit 
+                && bullet.x + bullet.width > invertedUfo.x
+                && bullet.y + bullet.height > invertedUfo.y
+                && bullet.x < invertedUfo.x
+                && bullet.y < invertedUfo.y + invertedUfo.height)
+            {
+                resetAmmo();
+                invertedUfo.hit = true;
+                invertedUfo.img.src = 'Images/explosion.png';
+                console.log('DEFEATED!');
+                
+                score += 1;
+                updateSpeedIndicator += 1;
+                document.getElementById('scoreText').innerHTML = score;
+
+                setTimeout(() => {
+                    invertedUfos = invertedUfos.filter(u => u != invertedUfo); 
                 }, 2000);
             }
         });
