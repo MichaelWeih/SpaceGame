@@ -37,8 +37,9 @@ let scoreBoard = [];
 
     //Items
     let createAmmoRefillVar;
+    let createSpeedBoostVar;
 
-//Gamechanger
+//Gamelogik
 let updateSpeedIndicator = 0;
 let ufoSpeed = 5;
 
@@ -108,7 +109,8 @@ let SpeedBoost = {
     width: 80,
     height: 50,
     src: 'Images/SpeedBoost.png',
-    img: new Image()      
+    img: new Image(),
+    speed: 5    
 };
 let SpeedBoosts = [];
 
@@ -180,7 +182,8 @@ function startGame(){
     createBulletsVar = setInterval(createBullets, 1000 / 10);
     createInvertedBulletsVar = setInterval(createInvertedBullets, 1000 / 10);
     updateUfoSpawnVar = setInterval(updateUfoSpawn, 1000 / 25);
-    createAmmoRefillVar = setInterval(createAmmoRefill, 15000)
+    createAmmoRefillVar = setInterval(createAmmoRefill, 15000);
+    createSpeedBoostVar = setInterval(createSpeedBoost, 3000);
 
     draw();
 }
@@ -274,7 +277,19 @@ function checkForCollision(){
                 console.log("AmmoRefill SUCCESS!")
                 AmmoRefills = AmmoRefills.filter(a => a != AmmoRefill); 
                 resetAmmo();
-        }
+        };
+    });
+
+    SpeedBoosts.forEach(function(SpeedBoost){
+        if(!SpeedBoost.isCollected 
+            && rocket.x + rocket.width > SpeedBoost.x 
+            && rocket.y + rocket.height > SpeedBoost.y
+            && rocket.x < SpeedBoost.x 
+            && rocket.y < SpeedBoost.y){
+                console.log("SpeedBoost SUCCESS!");
+                SpeedBoosts = SpeedBoosts.filter(s => s != SpeedBoost); 
+                rocket.speed = 10;
+            }
     });
 
     invertedUfos.forEach(function(invertedUfo){
@@ -336,8 +351,25 @@ function checkForCollision(){
     });
 }
 
+function createSpeedBoost(){
+    let SpeedBoost = {
+        x: 700,
+        y: Math.floor(Math.random() * 305),
+        width: 40,
+        height: 80,
+        src: 'Images/SpeedBoost.png',
+        img: new Image(),
+        speed: 5,
+        isCollected: false
+    }
+    console.log("Speedboost created!");
+    SpeedBoost.img.src = SpeedBoost.src;
+    SpeedBoosts.push(SpeedBoost);
+}
+
 function createAmmoRefill(){
     let AmmoRefill = {
+        isCollected: false,
         x: 700,
         y: Math.floor(Math.random() * 305),
         width: 40,
@@ -345,7 +377,7 @@ function createAmmoRefill(){
         src: 'Images/ammoRefill.png',
         img: new Image()
     }
-    console.log("AmmoRefill out!")
+    console.log("AmmoRefill created!")
     AmmoRefill.img.src = AmmoRefill.src;
     AmmoRefills.push(AmmoRefill);
 }
@@ -464,19 +496,19 @@ function update(){
     }
 
     else if(KEY_UP){
-        rocket.y -= 4; 
+        rocket.y -= rocket.speed; 
     }
 
     else if(KEY_DOWN){
-        rocket.y += 4; 
+        rocket.y += rocket.speed; 
     }
 
     else if(KEY_RIGHT){
-        rocket.x += 4; 
+        rocket.x += rocket.speed; 
     }
 
     else if(KEY_LEFT){
-        rocket.x -= 4; 
+        rocket.x -= rocket.speed; 
     }
 
     bullets.forEach(function(bullet){
@@ -496,6 +528,12 @@ function update(){
             AmmoRefill.x -= 5;
         }
     });
+
+    SpeedBoosts.forEach(function(SpeedBoost){
+        if(!SpeedBoost.isCollected){
+            SpeedBoost.x -= 5;
+        }
+    })
 
     if(!rocket.defeated){
         ufos.forEach(function(ufo){
@@ -581,6 +619,9 @@ function loadImages(){
 
     AmmoRefill.img = 'Images/ammoRefill.png';
     AmmoRefill.img.src = AmmoRefill.src;
+
+    SpeedBoost.img = 'Images/SpeedBoost.png';
+    SpeedBoost.img.src = SpeedBoost.src;
 }
 
 function draw(){
@@ -605,6 +646,10 @@ function draw(){
     
     AmmoRefills.forEach(function(AmmoRefill){
         ctx.drawImage(AmmoRefill.img, AmmoRefill.x, AmmoRefill.y, AmmoRefill.width, AmmoRefill.height);
+    });
+
+    SpeedBoosts.forEach(function(SpeedBoost){
+        ctx.drawImage(SpeedBoost.img, SpeedBoost.x, SpeedBoost.y, SpeedBoost.width, SpeedBoost.height);
     });
 
     requestAnimationFrame(draw);
