@@ -65,6 +65,7 @@ document.cookie = "username=Michi";
         src: 'Images/ufo.png',
         hit: false
     }
+    let ufos = [];
 
     let invertedUfo = {
         hit: false,
@@ -75,9 +76,7 @@ document.cookie = "username=Michi";
         src: 'Images/ufo.png',
         img: new Image()
     };
-
     let invertedUfos = [];
-    let ufos = [];
 
 //Weapons
 let bullets = [];
@@ -86,7 +85,6 @@ let ammo = {
     currentMag: 100,
     standardMag: 100
 };
-
 
 //Items
 let AmmoRefill = {
@@ -97,8 +95,19 @@ let AmmoRefill = {
     height: 50,
     src: 'Images/ammoRefill.png',
     img: new Image()
-}
+};
 let AmmoRefills = [];
+
+let SpeedBoost = {
+    isCollected: false,
+    x: 0,
+    y: 0,
+    width: 80,
+    height: 50,
+    src: 'Images/SpeedBoost.png',
+    img: new Image()      
+};
+let SpeedBoosts = [];
 
 document.onkeydown = function(e){
     console.log(e.keyCode)
