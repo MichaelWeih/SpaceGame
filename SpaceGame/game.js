@@ -54,7 +54,8 @@ document.cookie = "username=Michi";
         y: 200,
         width: 60,
         height: 80,
-        src: 'Images/rocket.png'
+        src: 'Images/rocket.png',
+        speed: 4
     }
     
     let ufo = {
@@ -63,7 +64,8 @@ document.cookie = "username=Michi";
         width: 160,
         height: 80,
         src: 'Images/ufo.png',
-        hit: false
+        hit: false,
+        speed: 5
     }
     let ufos = [];
 
@@ -74,7 +76,8 @@ document.cookie = "username=Michi";
         width: 120,
         height: 60,
         src: 'Images/ufo.png',
-        img: new Image()
+        img: new Image(),
+        speed: 5
     };
     let invertedUfos = [];
 
@@ -388,7 +391,8 @@ function createUfos(_xValue){
         width: 120,
         height: 60,
         src: 'Images/ufo.png',
-        img: new Image()
+        img: new Image(),
+        speed: 4
     };
     ufo.img.src = ufo.src;
     ufos.push(ufo);
@@ -401,7 +405,8 @@ function createInvertedUfos(){
         width: 120,
         height: 60,
         src: 'Images/ufo.png',
-        img: new Image()
+        img: new Image(),
+        speed: 4
     };
     invertedUfo.img.src = invertedUfo.src;
     invertedUfos.push(invertedUfo);
@@ -411,7 +416,7 @@ let invertUfoIntervallSet;
 function updateUfoSpawn(){
     if(updateSpeedIndicator == 3){
             updateSpeedIndicator = 0;
-            ufoSpeed += 1;
+            ufo.speed += 1;
         } 
 
     if(score >= 10){
@@ -494,12 +499,12 @@ function update(){
 
     if(!rocket.defeated){
         ufos.forEach(function(ufo){
-            ufo.x -= ufoSpeed;
+            ufo.x -= ufo.speed;
         });
 
         if(invertedUfos.length != 0){
             invertedUfos.forEach(function(invertedUfo){
-                invertedUfo.x += ufoSpeed;
+                invertedUfo.x += invertedUfo.speed;
             });
         }
     }
