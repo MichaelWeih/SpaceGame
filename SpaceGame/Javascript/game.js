@@ -212,12 +212,12 @@ function update(){
 
     if(!rocket.defeated){
         ufos.forEach(function(ufo){
-            if(ufo.x != -100){
+            //if(ufo.isInverted == false){
                 ufo.x -= ufo.speed;
-            }
-            else{
-                ufo.x += ufo.speed;
-            }
+            //}
+            //else{
+            //    ufo.x += ufo.speed;
+            //}
         });
 
         if(invertedUfos.length != 0){

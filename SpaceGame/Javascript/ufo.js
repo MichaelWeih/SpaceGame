@@ -8,7 +8,8 @@ let ufo = {
     src: 'Images/ufo.png',
     hit: false,
     speed: 5,
-    isInverted: false
+    img: new Image(),
+    //isInverted = false
 }
 
 let invertedUfo = {
@@ -31,8 +32,13 @@ function createUfos(_xValue){
         height: 60,
         src: 'Images/ufo.png',
         img: new Image(),
-        speed: 4
+        speed: 4,
+        //isInverted = false
     };
+
+    // if(_xValue == -100){
+    //     ufo.isInverted = false;
+    // }
     ufo.img.src = ufo.src;
     ufos.push(ufo);
 }
