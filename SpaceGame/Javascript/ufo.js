@@ -7,7 +7,8 @@ let ufo = {
     height: 80,
     src: 'Images/ufo.png',
     hit: false,
-    speed: 5
+    speed: 5,
+    isInverted: false;
 }
 
 let invertedUfo = {

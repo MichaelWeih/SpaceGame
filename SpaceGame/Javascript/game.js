@@ -11,17 +11,13 @@ let canvas;
 let ctx;
 let backgroundImage = new Image();
 
-
 //Score
 let score = 10;
 let scoreBoard = [];
 
-
-
 //Gamelogik
 let updateSpeedIndicator = 0;
 let ufoSpeed = 5;
-    
     //Intervals
         //Gameplay
         let updateVar;
@@ -133,7 +129,7 @@ function updateUfoSpawn(){
     if(score >= 10){
         if(!invertUfoIntervallSet){
             invertUfoIntervallSet = true;
-            createInvertedUfosVar = setInterval(createInvertedUfos, 5000);
+            // createInvertedUfosVar = setInterval(createInvertedUfos, 5000);
             createInvertedUfosVar = setInterval(function(){createUfos(-100)} , 5000);
         }
     }
@@ -216,7 +212,12 @@ function update(){
 
     if(!rocket.defeated){
         ufos.forEach(function(ufo){
-            ufo.x -= ufo.speed;
+            if(ufo.x != -100){
+                ufo.x -= ufo.speed;
+            }
+            else{
+                ufo.x += ufo.speed;
+            }
         });
 
         if(invertedUfos.length != 0){
@@ -230,6 +231,11 @@ function update(){
 function SetGameOver(){
     stopMovingRocket();
     ClearAllIntervals();
+    ufos = [];
+    invertedUfos = [];
+    bullets = [];
+    invertedBullets = [];
+
     
     invertUfoIntervallSet = false;
     document.getElementById('scoreText').innerHTML = `${score}`;
@@ -260,6 +266,8 @@ function ClearAllIntervals(){
     clearInterval(updateUfoSpawnVar);
     clearInterval(createInvertedUfosVar);
     clearInterval(createInvertedBulletsVar);
+    clearInterval(createSpeedBoostVar);
+    clearInterval(createAmmoRefillVar);
 }
 
 function restartGame(){
