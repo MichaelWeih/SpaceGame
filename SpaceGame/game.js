@@ -183,7 +183,7 @@ function startGame(){
     createInvertedBulletsVar = setInterval(createInvertedBullets, 1000 / 10);
     updateUfoSpawnVar = setInterval(updateUfoSpawn, 1000 / 25);
     createAmmoRefillVar = setInterval(createAmmoRefill, 15000);
-    createSpeedBoostVar = setInterval(createSpeedBoost, 3000);
+    createSpeedBoostVar = setInterval(createSpeedBoost, 30000);
 
     draw();
 }
@@ -289,6 +289,11 @@ function checkForCollision(){
                 console.log("SpeedBoost SUCCESS!");
                 SpeedBoosts = SpeedBoosts.filter(s => s != SpeedBoost); 
                 rocket.speed = 10;
+
+                //Set Speed back after 10 Seconds
+                setTimeout(function(){
+                    rocket.speed = 5
+                }, 10000);
             }
     });
 
@@ -355,8 +360,8 @@ function createSpeedBoost(){
     let SpeedBoost = {
         x: 700,
         y: Math.floor(Math.random() * 305),
-        width: 40,
-        height: 80,
+        width: 50,
+        height: 70,
         src: 'Images/SpeedBoost.png',
         img: new Image(),
         speed: 5,
@@ -373,7 +378,7 @@ function createAmmoRefill(){
         x: 700,
         y: Math.floor(Math.random() * 305),
         width: 40,
-        height: 80,
+        height: 60,
         src: 'Images/ammoRefill.png',
         img: new Image()
     }
