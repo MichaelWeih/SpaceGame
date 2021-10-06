@@ -6,10 +6,6 @@ let KEY_LEFT = false; // 40
 let KEY_Q = false; // 81
 let KEY_E = false; // 69
 
-// $.getScript("my_lovely_script.js", function() {
-//     alert("Script loaded but not necessarily executed.");
-//  });
-
 //Background
 let canvas;
 let ctx;
@@ -21,97 +17,31 @@ let score = 10;
 let scoreBoard = [];
 
 
-//Intervals
-    //Gameplay
-    let updateVar;
-    let checkForCollisionVar;
-    let updateUfoSpawnVar;
-
-    //Convertibles
-    let createUfoVar;
-    let createInvertedUfosVar;
-
-    //Guns
-    let createBulletsVar;
-    let createInvertedBulletsVar;
-
-    //Items
-    let createAmmoRefillVar;
-    let createSpeedBoostVar;
 
 //Gamelogik
 let updateSpeedIndicator = 0;
 let ufoSpeed = 5;
+    
+    //Intervals
+        //Gameplay
+        let updateVar;
+        let checkForCollisionVar;
+        let updateUfoSpawnVar;
 
+        //Convertibles
+        let createUfoVar;
+        let createInvertedUfosVar;
+
+        //Guns
+        let createBulletsVar;
+        let createInvertedBulletsVar;
+
+        //Items
+        let createAmmoRefillVar;
+        let createSpeedBoostVar;
 
 //Cookies
 document.cookie = "username=Michi";
-
-
-//Objects
-    //Convertibles
-    let rocket = {
-        x: 100,
-        y: 200,
-        width: 60,
-        height: 80,
-        src: 'Images/rocket.png',
-        speed: 4
-    }
-    
-    let ufo = {
-        x: 600,
-        y: 120,
-        width: 160,
-        height: 80,
-        src: 'Images/ufo.png',
-        hit: false,
-        speed: 5
-    }
-
-    let invertedUfo = {
-        hit: false,
-        x: 0,
-        y: 120,
-        width: 120,
-        height: 60,
-        src: 'Images/ufo.png',
-        img: new Image(),
-        speed: 5
-    };
-    let invertedUfos = [];
-
-//Weapons
-let bullets = [];
-let invertedBullets = [];
-let ammo = {
-    currentMag: 100,
-    standardMag: 100
-};
-
-//Items
-let AmmoRefill = {
-    isCollected: false,
-    x: 0,
-    y: 0,
-    width: 80,
-    height: 50,
-    src: 'Images/ammoRefill.png',
-    img: new Image()
-};
-let AmmoRefills = [];
-
-let SpeedBoost = {
-    isCollected: false,
-    x: 0,
-    y: 0,
-    width: 80,
-    height: 50,
-    src: 'Images/SpeedBoost.png',
-    img: new Image(),
-    speed: 5    
-};
-let SpeedBoosts = [];
 
 document.onkeydown = function(e){
     console.log(e.keyCode)
@@ -142,7 +72,6 @@ document.onkeydown = function(e){
 }
 
 document.onkeyup = function(e){
-
     if(e.keyCode == 69 && !rocket.hit){
         KEY_E = false;
     }
@@ -188,264 +117,10 @@ function startGame(){
 }
 
 function checkForCollision(){
-    ufos.forEach(function(ufo){
-        if(!ufo.hit 
-        && rocket.x + rocket.width > ufo.x 
-        && rocket.y + rocket.height > ufo.y
-        && rocket.x < ufo.x 
-        && rocket.y < ufo.y)
-        {
-            rocket.img.src = 'Images/explosion.png';
-            rocket.hit = true;
-            console.log('Collision!');
-            ufos = ufos.filter(u => u != ufo);
-        }
-        
-        bullets.forEach(function(bullet){
-            if(!ufo.hit 
-            && bullet.x + bullet.width > ufo.x
-            && bullet.y + bullet.height > ufo.y
-            && bullet.x < ufo.x
-            && bullet.y < ufo.y + ufo.height)
-            {
-                resetAmmo();
-                ufo.hit = true;
-                ufo.img.src = 'Images/explosion.png';
-                console.log('DEFEATED!');
-                
-                score += 1;
-                updateSpeedIndicator += 1;
-                document.getElementById('scoreText').innerHTML = score;
-
-                setTimeout(() => {
-                    ufos = ufos.filter(u => u != ufo); 
-                }, 2000);
-            }
-            else if(function(ufo){ 
-            !ufo.hit 
-            && ufo.x + ufo.width > rocket.x
-            && ufo.y + ufo.height > rocket.y
-            && ufo.x < rocket.x 
-            && ufo.y < rocket.y + rocket.height
-            {
-                resetAmmo();
-                ufo.hit = true;
-                ufo.img.src = 'Images/explosion.png';
-                console.log('DEFEATED!');
-                
-                score += 1;
-                updateSpeedIndicator += 1;
-                document.getElementById('scoreText').innerHTML = score;
-
-                setTimeout(() => {
-                    ufos = ufos.filter(u => u != ufo); 
-                }, 2000);
-            }
-            });
-        });
-
-        invertedBullets.forEach(function(invertedBullet){
-            if(!ufo.hit 
-                && invertedBullet.x < ufo.x + ufo.width
-                && invertedBullet.y + invertedBullet.height > ufo.y
-                && ufo.x < invertedBullet.x
-                && invertedBullet.y < ufo.y + ufo.height)
-            {
-                    resetAmmo();
-                    ufo.hit = true;
-                    ufo.img.src = 'Images/explosion.png';
-                    console.log('DEFEATED!');
-                    
-                    score += 1;
-                    updateSpeedIndicator += 1;
-                    document.getElementById('scoreText').innerHTML = score;
-    
-                    setTimeout(() => {
-                        ufos = ufos.filter(u => u != ufo); 
-                    }, 2000);
-            }
-        });
-    });  
-
-    AmmoRefills.forEach(function(AmmoRefill){
-        if(!AmmoRefill.isCollected
-            && rocket.x + rocket.width > AmmoRefill.x 
-            && rocket.y + rocket.height > AmmoRefill.y
-            && rocket.x < AmmoRefill.x 
-            && rocket.y < AmmoRefill.y){
-                console.log("AmmoRefill SUCCESS!")
-                AmmoRefills = AmmoRefills.filter(a => a != AmmoRefill); 
-                resetAmmo();
-        };
-    });
-
-    SpeedBoosts.forEach(function(SpeedBoost){
-        if(!SpeedBoost.isCollected 
-            && rocket.x + rocket.width > SpeedBoost.x 
-            && rocket.y + rocket.height > SpeedBoost.y
-            && rocket.x < SpeedBoost.x 
-            && rocket.y < SpeedBoost.y){
-                console.log("SpeedBoost SUCCESS!");
-                SpeedBoosts = SpeedBoosts.filter(s => s != SpeedBoost); 
-                rocket.speed = 10;
-
-                //Set Speed back after 10 Seconds
-                setTimeout(function(){
-                    rocket.speed = 5
-                }, 10000);
-            }
-    });
-
-    invertedUfos.forEach(function(invertedUfo){
-        if(!invertedUfo.hit
-            && invertedUfo.x + invertedUfo.width > rocket.x
-            && invertedUfo.y + invertedUfo.height > rocket.y
-            && invertedUfo.x < rocket.x 
-            && invertedUfo.y < rocket.y + rocket.height
-            ){
-                rocket.img.src = 'Images/explosion.png';
-                rocket.hit = true;
-                console.log('Collision!');
-                ufos = ufos.filter(u => u != ufo);
-            }
-
-        invertedBullets.forEach(function(invertedBullet){
-            if(!invertedUfo.hit 
-               && invertedBullet.x < invertedUfo.x + invertedUfo.width
-               && invertedBullet.y + invertedBullet.height > invertedUfo.y
-               && invertedUfo.x < invertedBullet.x
-               && invertedBullet.y < invertedUfo.y + invertedUfo.height)
-            {
-                resetAmmo();
-                invertedUfo.hit = true;
-                invertedUfo.img.src = 'Images/explosion.png';
-                console.log('DEFEATED!');
-                
-                score += 1;
-                updateSpeedIndicator += 1;
-                document.getElementById('scoreText').innerHTML = score;
-
-                setTimeout(() => {
-                    invertedUfos = invertedUfos.filter(u => u != invertedUfo); 
-                }, 2000);
-            }
-        });
-
-        bullets.forEach(function(bullet){
-            if(!invertedUfo.hit 
-                && bullet.x + bullet.width > invertedUfo.x
-                && bullet.y + bullet.height > invertedUfo.y
-                && bullet.x < invertedUfo.x
-                && bullet.y < invertedUfo.y + invertedUfo.height)
-            {
-                resetAmmo();
-                invertedUfo.hit = true;
-                invertedUfo.img.src = 'Images/explosion.png';
-                console.log('DEFEATED!');
-                
-                score += 1;
-                updateSpeedIndicator += 1;
-                document.getElementById('scoreText').innerHTML = score;
-
-                setTimeout(() => {
-                    invertedUfos = invertedUfos.filter(u => u != invertedUfo); 
-                }, 2000);
-            }
-        });
-    });
-}
-
-function createSpeedBoost(){
-    let SpeedBoost = {
-        x: 700,
-        y: Math.floor(Math.random() * 305),
-        width: 50,
-        height: 70,
-        src: 'Images/SpeedBoost.png',
-        img: new Image(),
-        speed: 5,
-        isCollected: false
-    }
-    console.log("Speedboost created!");
-    SpeedBoost.img.src = SpeedBoost.src;
-    SpeedBoosts.push(SpeedBoost);
-}
-
-function createAmmoRefill(){
-    let AmmoRefill = {
-        isCollected: false,
-        x: 700,
-        y: Math.floor(Math.random() * 305),
-        width: 40,
-        height: 60,
-        src: 'Images/ammoRefill.png',
-        img: new Image()
-    }
-    console.log("AmmoRefill created!")
-    AmmoRefill.img.src = AmmoRefill.src;
-    AmmoRefills.push(AmmoRefill);
-}
-
-function createBullets(){
-    if(isKEY_E){
-        if  (KEY_E && !rocket.hit)  {
-            let bullet = {
-                x: rocket.x + 80,
-                y: rocket.y + 22,
-                width: 40,
-                height: 10,
-                src: 'Images/bullet.png',
-                img: new Image()
-            };
-            bullet.img.src = bullet.src;
-            bullets.push(bullet);
-        }
-    }
-}
-
-function createInvertedBullets(){
-    if(isKEY_Q){
-        if  (KEY_Q && !rocket.hit){
-            let invertedBullet = {
-                x: rocket.x - 80,
-                y: rocket.y + 22,
-                width: 40,
-                height: 10,
-                src: 'Images/bullet.png',
-                img: new Image()
-            };
-            invertedBullet.img.src = invertedBullet.src;
-            invertedBullets.push(invertedBullet);
-        }
-    }
-}
-
-// function createUfos(_xValue){
-//     let ufo = {
-//         x: _xValue,
-//         y: Math.floor(Math.random() * 305),
-//         width: 120,
-//         height: 60,
-//         src: 'Images/ufo.png',
-//         img: new Image(),
-//         speed: 4
-//     };
-//     ufo.img.src = ufo.src;
-//     ufos.push(ufo);
-// }
-
-function createInvertedUfos(){
-    let invertedUfo = {
-        x: -100,
-        y: Math.floor(Math.random() * 305),
-        width: 120,
-        height: 60,
-        src: 'Images/ufo.png',
-        img: new Image(),
-        speed: 4
-    };
-    invertedUfo.img.src = invertedUfo.src;
-    invertedUfos.push(invertedUfo);
+    checkForUfoCollision();
+    checkForAmmoRefillCollision();
+    checkForSpeedBoostCollision();
+    checkForInvertedUfoCollison();
 }
 
 let invertUfoIntervallSet;
@@ -577,15 +252,6 @@ function SetGameOver(){
     score = 0;
 }
 
-function stopMovingRocket(){
-    KEY_UP = false;
-    KEY_RIGHT = false;
-    KEY_LEFT = false;
-    KEY_DOWN = false;
-    KEY_Q = false;
-    KEY_E = false;
-}
-
 function ClearAllIntervals(){
     clearInterval(updateVar);
     clearInterval(createUfoVar);
@@ -605,11 +271,6 @@ function restartGame(){
     rocket.defeated = false;
     resetAmmo();
     GameOverScreen.innerHTML = ``;
-}
-
-function resetAmmo(){
-    ammo.currentMag = ammo.standardMag;
-    document.getElementById('ammo').innerHTML = `${ammo.currentMag}`;
 }
 
 function loadImages(){
