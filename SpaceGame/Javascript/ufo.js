@@ -8,7 +8,7 @@ let ufo = {
     src: 'Images/ufo.png',
     hit: false,
     speed: 5,
-    isInverted: false;
+    isInverted: false
 }
 
 let invertedUfo = {
