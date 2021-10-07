@@ -9,20 +9,20 @@ let ufo = {
     hit: false,
     speed: 5,
     img: new Image(),
-    //isInverted = false
+    isInverted: false
 }
 
-let invertedUfo = {
-    hit: false,
-    x: 0,
-    y: 120,
-    width: 120,
-    height: 60,
-    src: 'Images/ufo.png',
-    img: new Image(),
-    speed: 5
-};
-let invertedUfos = [];
+// let invertedUfo = {
+//     hit: false,
+//     x: 0,
+//     y: 120,
+//     width: 120,
+//     height: 60,
+//     src: 'Images/ufo.png',
+//     img: new Image(),
+//     speed: 5
+// };
+// let invertedUfos = [];
 
 function createUfos(_xValue){
     let ufo = {
@@ -33,32 +33,35 @@ function createUfos(_xValue){
         src: 'Images/ufo.png',
         img: new Image(),
         speed: 4,
-        //isInverted = false
+        isInverted: false
     };
 
-    // if(_xValue == -100){
-    //     ufo.isInverted = false;
-    // }
+    if(_xValue == -100){
+        ufo.isInverted = true;
+    }
     ufo.img.src = ufo.src;
     ufos.push(ufo);
 }
 
-function createInvertedUfos(){
-    let invertedUfo = {
-        x: -100,
-        y: Math.floor(Math.random() * 305),
-        width: 120,
-        height: 60,
-        src: 'Images/ufo.png',
-        img: new Image(),
-        speed: 4
-    };
-    invertedUfo.img.src = invertedUfo.src;
-    invertedUfos.push(invertedUfo);
+function documentKill(ufo, bullet){
+    resetAmmo();
+    ufo.hit = true;
+    ufo.img.src = 'Images/explosion.png';
+    console.log('DEFEATED!');
+    
+    score += 1;
+    updateSpeedIndicator += 1;
+    document.getElementById('scoreText').innerHTML = score;
+
+    setTimeout(() => 
+    {
+        ufos = ufos.filter(u => u != ufo); 
+    }, 2000);
 }
 
 function checkForUfoCollision(){
-    ufos.forEach(function(ufo){
+    ufos.forEach(function(ufo)
+    {
         if(!ufo.hit 
         && rocket.x + rocket.width > ufo.x 
         && rocket.y + rocket.height > ufo.y
@@ -71,12 +74,15 @@ function checkForUfoCollision(){
             ufos = ufos.filter(u => u != ufo);
         }
         
-        bullets.forEach(function(bullet){
-            if(!ufo.hit 
-            && bullet.x + bullet.width > ufo.x
-            && bullet.y + bullet.height > ufo.y
-            && bullet.x < ufo.x
-            && bullet.y < ufo.y + ufo.height)
+        bullets.forEach(function(bullet)
+        {
+            if(
+                !ufo.hit 
+                && bullet.x + bullet.width > ufo.x
+                && bullet.y + bullet.height > ufo.y
+                && bullet.x < ufo.x
+                && bullet.y < ufo.y + ufo.height
+            )
             {
                 resetAmmo();
                 ufo.hit = true;
@@ -87,113 +93,138 @@ function checkForUfoCollision(){
                 updateSpeedIndicator += 1;
                 document.getElementById('scoreText').innerHTML = score;
 
-                setTimeout(() => {
+                setTimeout(() => 
+                {
                     ufos = ufos.filter(u => u != ufo); 
                 }, 2000);
             }
-            else if(function(ufo){ 
-            !ufo.hit 
-            && ufo.x + ufo.width > rocket.x
-            && ufo.y + ufo.height > rocket.y
-            && ufo.x < rocket.x 
-            && ufo.y < rocket.y + rocket.height
-            {
-                resetAmmo();
-                ufo.hit = true;
-                ufo.img.src = 'Images/explosion.png';
-                console.log('DEFEATED!');
-                
-                score += 1;
-                updateSpeedIndicator += 1;
-                document.getElementById('scoreText').innerHTML = score;
 
-                setTimeout(() => {
-                    ufos = ufos.filter(u => u != ufo); 
-                }, 2000);
+            else if(
+                !ufo.hit 
+                && bullet.x < ufo.x + ufo.width
+                && bullet.y + bullet.height > ufo.y
+                && ufo.x < bullet.x
+                && bullet.y < ufo.y + ufo.height)
+            {
+                documentKill(ufo, bullet);
             }
-            });
+
+            // else if(function(ufo){
+            //     !ufo.hit
+            //     && ufo.isInverted
+            //     && bullet.x < ufo.x
+            //     && bullet.x < ufo.x + ufo.width
+            //     && bullet.y + bullet.height > ufo.y
+            //     && bullet.y < ufo.y + ufo.height 
+            // })
+            // {
+            //     documentKill(ufo, bullet);
+            // }
+
+            // else if(function(ufo){
+            //     !ufo.hit
+            //     && !ufo.isInverted
+            //     && bullet.x < ufo.x
+            //     && bullet.x < ufo.x + ufo.width
+            //     && bullet.y + bullet.height > ufo.y
+            //     && bullet.y < ufo.y + ufo.height
+            // })
+            // {
+            //     documentKill(ufo, bullet);
+            // }
+
+            // else if(function(ufo){ 
+            //     !ufo.hit 
+            //     && ufo.x + ufo.width > rocket.x
+            //     && ufo.y + ufo.height > rocket.y
+            //     && ufo.x < rocket.x 
+            //     && ufo.y < rocket.y + rocket.height
+            // {
+            //     documentKill(ufo, bullet);
+            // }
+            // });
         });
 
-        invertedBullets.forEach(function(invertedBullet){
-            if(!ufo.hit 
-                && invertedBullet.x < ufo.x + ufo.width
-                && invertedBullet.y + invertedBullet.height > ufo.y
-                && ufo.x < invertedBullet.x
-                && invertedBullet.y < ufo.y + ufo.height)
-            {
-                    resetAmmo();
-                    ufo.hit = true;
-                    ufo.img.src = 'Images/explosion.png';
-                    console.log('DEFEATED!');
+        // invertedBullets.forEach(function(invertedBullet){
+        //     if(!ufo.hit 
+        //         && invertedBullet.x < ufo.x + ufo.width
+        //         && invertedBullet.y + invertedBullet.height > ufo.y
+        //         && ufo.x < invertedBullet.x
+        //         && invertedBullet.y < ufo.y + ufo.height)
+        //     {
+        //             resetAmmo();
+        //             ufo.hit = true;
+        //             ufo.img.src = 'Images/explosion.png';
+        //             console.log('DEFEATED!');
                     
-                    score += 1;
-                    updateSpeedIndicator += 1;
-                    document.getElementById('scoreText').innerHTML = score;
+        //             score += 1;
+        //             updateSpeedIndicator += 1;
+        //             document.getElementById('scoreText').innerHTML = score;
     
-                    setTimeout(() => {
-                        ufos = ufos.filter(u => u != ufo); 
-                    }, 2000);
-            }
-        });
+        //             setTimeout(() => {
+        //                 ufos = ufos.filter(u => u != ufo); 
+        //             }, 2000);
+        //     }
+        // });
     });  
 }
 
-function checkForInvertedUfoCollison(){
-    invertedUfos.forEach(function(invertedUfo){
-        if(!invertedUfo.hit
-            && invertedUfo.x + invertedUfo.width > rocket.x
-            && invertedUfo.y + invertedUfo.height > rocket.y
-            && invertedUfo.x < rocket.x 
-            && invertedUfo.y < rocket.y + rocket.height
-            ){
-                rocket.img.src = 'Images/explosion.png';
-                rocket.hit = true;
-                console.log('Collision!');
-                ufos = ufos.filter(u => u != ufo);
-            }
+// function checkForInvertedUfoCollison(){
+//     invertedUfos.forEach(function(invertedUfo){
+//         if(!invertedUfo.hit
+//             && invertedUfo.x + invertedUfo.width > rocket.x
+//             && invertedUfo.y + invertedUfo.height > rocket.y
+//             && invertedUfo.x < rocket.x 
+//             && invertedUfo.y < rocket.y + rocket.height
+//             ){
+//                 rocket.img.src = 'Images/explosion.png';
+//                 rocket.hit = true;
+//                 console.log('Collision!');
+//                 ufos = ufos.filter(u => u != ufo);
+//             }
 
-        invertedBullets.forEach(function(invertedBullet){
-            if(!invertedUfo.hit 
-               && invertedBullet.x < invertedUfo.x + invertedUfo.width
-               && invertedBullet.y + invertedBullet.height > invertedUfo.y
-               && invertedUfo.x < invertedBullet.x
-               && invertedBullet.y < invertedUfo.y + invertedUfo.height)
-            {
-                resetAmmo();
-                invertedUfo.hit = true;
-                invertedUfo.img.src = 'Images/explosion.png';
-                console.log('DEFEATED!');
+//         invertedBullets.forEach(function(invertedBullet){
+//             if(!invertedUfo.hit 
+//                && invertedBullet.x < invertedUfo.x + invertedUfo.width
+//                && invertedBullet.y + invertedBullet.height > invertedUfo.y
+//                && invertedUfo.x < invertedBullet.x
+//                && invertedBullet.y < invertedUfo.y + invertedUfo.height)
+//             {
+//                 resetAmmo();
+//                 invertedUfo.hit = true;
+//                 invertedUfo.img.src = 'Images/explosion.png';
+//                 console.log('DEFEATED!');
                 
-                score += 1;
-                updateSpeedIndicator += 1;
-                document.getElementById('scoreText').innerHTML = score;
+//                 score += 1;
+//                 updateSpeedIndicator += 1;
+//                 document.getElementById('scoreText').innerHTML = score;
 
-                setTimeout(() => {
-                    invertedUfos = invertedUfos.filter(u => u != invertedUfo); 
-                }, 2000);
-            }
-        });
+//                 setTimeout(() => {
+//                     invertedUfos = invertedUfos.filter(u => u != invertedUfo); 
+//                 }, 2000);
+//             }
+//         });
 
-        bullets.forEach(function(bullet){
-            if(!invertedUfo.hit 
-                && bullet.x + bullet.width > invertedUfo.x
-                && bullet.y + bullet.height > invertedUfo.y
-                && bullet.x < invertedUfo.x
-                && bullet.y < invertedUfo.y + invertedUfo.height)
-            {
-                resetAmmo();
-                invertedUfo.hit = true;
-                invertedUfo.img.src = 'Images/explosion.png';
-                console.log('DEFEATED!');
+//         bullets.forEach(function(bullet){
+//             if(!invertedUfo.hit 
+//                 && bullet.x + bullet.width > invertedUfo.x
+//                 && bullet.y + bullet.height > invertedUfo.y
+//                 && bullet.x < invertedUfo.x
+//                 && bullet.y < invertedUfo.y + invertedUfo.height)
+//             {
+//                 resetAmmo();
+//                 invertedUfo.hit = true;
+//                 invertedUfo.img.src = 'Images/explosion.png';
+//                 console.log('DEFEATED!');
                 
-                score += 1;
-                updateSpeedIndicator += 1;
-                document.getElementById('scoreText').innerHTML = score;
+//                 score += 1;
+//                 updateSpeedIndicator += 1;
+//                 document.getElementById('scoreText').innerHTML = score;
 
-                setTimeout(() => {
-                    invertedUfos = invertedUfos.filter(u => u != invertedUfo); 
-                }, 2000);
-            }
-        });
-    });
-}
+//                 setTimeout(() => {
+//                     invertedUfos = invertedUfos.filter(u => u != invertedUfo); 
+//                 }, 2000);
+//             }
+//         });
+//     });
+// }

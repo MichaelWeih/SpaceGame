@@ -103,8 +103,8 @@ function startGame(){
     //Set Intervals
     createUfoVar = setInterval(function(){createUfos(700); } , 5000);
     checkForCollisionVar = setInterval(checkForCollision, 5000 / 25);
-    createBulletsVar = setInterval(createBullets, 1000 / 10);
-    createInvertedBulletsVar = setInterval(createInvertedBullets, 1000 / 10);
+    createBulletsVar = setInterval(function(){ createBullets(80);} , 1000 / 10);
+    createInvertedBulletsVar = setInterval(function(){ createBullets(-80);} , 1000 / 10);
     updateUfoSpawnVar = setInterval(updateUfoSpawn, 1000 / 25);
     createAmmoRefillVar = setInterval(createAmmoRefill, 15000);
     createSpeedBoostVar = setInterval(createSpeedBoost, 30000);
@@ -116,7 +116,7 @@ function checkForCollision(){
     checkForUfoCollision();
     checkForAmmoRefillCollision();
     checkForSpeedBoostCollision();
-    checkForInvertedUfoCollison();
+    //checkForInvertedUfoCollison();
 }
 
 let invertUfoIntervallSet;
@@ -129,7 +129,6 @@ function updateUfoSpawn(){
     if(score >= 10){
         if(!invertUfoIntervallSet){
             invertUfoIntervallSet = true;
-            // createInvertedUfosVar = setInterval(createInvertedUfos, 5000);
             createInvertedUfosVar = setInterval(function(){createUfos(-100)} , 5000);
         }
     }
@@ -188,14 +187,13 @@ function update(){
 
     bullets.forEach(function(bullet){
             if(!ufo.hit){
-                bullet.x += 10;
+                if(!bullet.isInverted){
+                    bullet.x += 10;
+                }
+                else{
+                    bullet.x -= 10;
+                }
             }
-    });
-
-    invertedBullets.forEach(function(invertedBullet){
-            if(!invertedUfo.hit){
-                invertedBullet.x -= 10;
-        }
     });
 
     AmmoRefills.forEach(function(AmmoRefill){
@@ -212,19 +210,13 @@ function update(){
 
     if(!rocket.defeated){
         ufos.forEach(function(ufo){
-            //if(ufo.isInverted == false){
+            if(ufo.isInverted == false){
                 ufo.x -= ufo.speed;
-            //}
-            //else{
-            //    ufo.x += ufo.speed;
-            //}
+            }
+            else{
+               ufo.x += ufo.speed;
+            }
         });
-
-        if(invertedUfos.length != 0){
-            invertedUfos.forEach(function(invertedUfo){
-                invertedUfo.x += invertedUfo.speed;
-            });
-        }
     }
 }
 
@@ -303,10 +295,6 @@ function draw(){
 
     ufos.forEach(function(ufo){
         ctx.drawImage(ufo.img, ufo.x, ufo.y, ufo.width, ufo.height);
-    });
-
-    invertedUfos.forEach(function(invertedUfo){
-        ctx.drawImage(invertedUfo.img, invertedUfo.x, invertedUfo.y, invertedUfo.width, invertedUfo.height);
     });
 
     bullets.forEach(function(bullet){
