@@ -7,22 +7,10 @@ let ufo = {
     height: 80,
     src: 'Images/ufo.png',
     hit: false,
-    speed: 5,
+    speed: ufoSpeed,
     img: new Image(),
     isInverted: false
 }
-
-// let invertedUfo = {
-//     hit: false,
-//     x: 0,
-//     y: 120,
-//     width: 120,
-//     height: 60,
-//     src: 'Images/ufo.png',
-//     img: new Image(),
-//     speed: 5
-// };
-// let invertedUfos = [];
 
 function createUfos(_xValue){
     let ufo = {
@@ -32,7 +20,7 @@ function createUfos(_xValue){
         height: 60,
         src: 'Images/ufo.png',
         img: new Image(),
-        speed: 4,
+        speed: ufoSpeed,
         isInverted: false
     };
 

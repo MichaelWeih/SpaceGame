@@ -123,8 +123,9 @@ let invertUfoIntervallSet;
 function updateUfoSpawn(){
     if(updateSpeedIndicator == 3){
             updateSpeedIndicator = 0;
+            ufoSpeed += 3;
             ufos.forEach(function(ufo){
-                ufo.speed += 3;
+                ufo.speed += ufoSpeed;
             })
         } 
 
@@ -229,8 +230,9 @@ function SetGameOver(){
     invertedUfos = [];
     bullets = [];
     invertedBullets = [];
+    ufoSpeed = 4;
 
-    
+    score = 0;
     invertUfoIntervallSet = false;
     document.getElementById('scoreText').innerHTML = `${score}`;
     rocket.defeated = true;
@@ -249,7 +251,6 @@ function SetGameOver(){
             <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="startAgain" onclick="restartGame()">
                 Restart
             </button>`;
-    score = 0;
 }
 
 function ClearAllIntervals(){
