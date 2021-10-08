@@ -43,8 +43,7 @@ function createUfos(_xValue){
     ufos.push(ufo);
 }
 
-function documentKill(ufo, bullet){
-    resetAmmo();
+function documentKill(ufo){
     ufo.hit = true;
     ufo.img.src = 'Images/explosion.png';
     console.log('DEFEATED!');
@@ -84,19 +83,7 @@ function checkForUfoCollision(){
                 && bullet.y < ufo.y + ufo.height
             )
             {
-                resetAmmo();
-                ufo.hit = true;
-                ufo.img.src = 'Images/explosion.png';
-                console.log('DEFEATED!');
-                
-                score += 1;
-                updateSpeedIndicator += 1;
-                document.getElementById('scoreText').innerHTML = score;
-
-                setTimeout(() => 
-                {
-                    ufos = ufos.filter(u => u != ufo); 
-                }, 2000);
+                documentKill(ufo);
             }
 
             else if(
@@ -106,7 +93,7 @@ function checkForUfoCollision(){
                 && ufo.x < bullet.x
                 && bullet.y < ufo.y + ufo.height)
             {
-                documentKill(ufo, bullet);
+                documentKill(ufo);
             }
         });
     });  

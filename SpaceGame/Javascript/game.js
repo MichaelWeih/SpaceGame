@@ -123,7 +123,9 @@ let invertUfoIntervallSet;
 function updateUfoSpawn(){
     if(updateSpeedIndicator == 3){
             updateSpeedIndicator = 0;
-            ufo.speed += 1;
+            ufos.forEach(function(ufo){
+                ufo.speed += 3;
+            })
         } 
 
     if(score >= 10){
