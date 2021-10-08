@@ -307,7 +307,7 @@ function setMinScoreTimer(){
     }
     else
     {
-        minScoreTimer = 10;
+        minScoreTimer = 20;
     }
 }
 
