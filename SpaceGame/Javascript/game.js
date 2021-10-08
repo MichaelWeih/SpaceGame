@@ -1,5 +1,9 @@
 //Controls
 let KEY_UP = false; //38
+let KEY_W = false; //87
+let KEY_A = false; //65
+let KEY_S = false; //83
+let KEY_D = false; //68
 let KEY_DOWN = false; // 40
 let KEY_RIGHT = false; // 40
 let KEY_LEFT = false; // 40
@@ -12,17 +16,21 @@ let ctx;
 let backgroundImage = new Image();
 
 //Score
-let score = 10;
+let score = 0;
 let scoreBoard = [];
 
 //Gamelogik
 let updateSpeedIndicator = 0;
 let ufoSpeed = 5;
+let minScore = 3;
+let minScoreTimer = 20;
     //Intervals
         //Gameplay
         let updateVar;
         let checkForCollisionVar;
         let updateUfoSpawnVar;
+        let checkMinScoreVar;
+        let setMinScoreTimerVar;
 
         //Convertibles
         let createUfoVar;
@@ -50,20 +58,20 @@ document.onkeydown = function(e){
         KEY_Q = true;
     }
 
-    if(e.keyCode == 37 && !rocket.hit){
-        KEY_LEFT = true;
+    if(e.keyCode == 65 && !rocket.hit){
+        KEY_A = true;
     }
 
-    if(e.keyCode == 38 && !rocket.hit){
-        KEY_UP = true;
+    if(e.keyCode == 87 && !rocket.hit){
+        KEY_W = true;
     }
 
-    if(e.keyCode == 39 && !rocket.hit){
-        KEY_RIGHT = true;
+    if(e.keyCode == 68 && !rocket.hit){
+        KEY_D = true;
     }
 
-    if(e.keyCode == 40 && !rocket.hit){
-        KEY_DOWN = true;
+    if(e.keyCode == 83 && !rocket.hit){
+        KEY_S = true;
     }
 }
 
@@ -76,20 +84,20 @@ document.onkeyup = function(e){
         KEY_Q = false;
     }
 
-    if(e.keyCode == 37 && !rocket.hit){
-        KEY_LEFT = false;
+    if(e.keyCode == 65 && !rocket.hit){
+        KEY_A = false;
     }
 
-    if(e.keyCode == 38 && !rocket.hit){
-        KEY_UP = false;
+    if(e.keyCode == 87 && !rocket.hit){
+        KEY_W = false;
     }
 
-    if(e.keyCode == 39 && !rocket.hit){
-        KEY_RIGHT = false;
+    if(e.keyCode == 68 && !rocket.hit){
+        KEY_D = false;
     }
 
-    if(e.keyCode == 40 && !rocket.hit){
-        KEY_DOWN = false;
+    if(e.keyCode == 83 && !rocket.hit){
+        KEY_S = false;
     }
 }
 
@@ -97,6 +105,8 @@ function startGame(){
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
     document.getElementById('ammo').innerHTML = `${ammo.currentMag}`;
+    document.getElementById('minScore').innerHTML = `${minScore}`;
+    document.getElementById('scoreText').innerHTML = `${score}`;
     document.onload = loadImages();
     updateVar = setInterval(update, 1000 / 25);
 
@@ -108,6 +118,8 @@ function startGame(){
     updateUfoSpawnVar = setInterval(updateUfoSpawn, 1000 / 25);
     createAmmoRefillVar = setInterval(createAmmoRefill, 15000);
     createSpeedBoostVar = setInterval(createSpeedBoost, 30000);
+    checkMinScoreVar = setInterval(function(){ checkMinScore(minScore);}, 20000);
+    setMinScoreTimerVar = setInterval(setMinScoreTimer, 1000);
 
     draw();
 }
@@ -116,7 +128,6 @@ function checkForCollision(){
     checkForUfoCollision();
     checkForAmmoRefillCollision();
     checkForSpeedBoostCollision();
-    //checkForInvertedUfoCollison();
 }
 
 let invertUfoIntervallSet;
@@ -172,19 +183,19 @@ function update(){
         SetGameOver();
     }
 
-    else if(KEY_UP){
+    else if(KEY_W){
         rocket.y -= rocket.speed; 
     }
 
-    else if(KEY_DOWN){
+    else if(KEY_S){
         rocket.y += rocket.speed; 
     }
 
-    else if(KEY_RIGHT){
+    else if(KEY_D){
         rocket.x += rocket.speed; 
     }
 
-    else if(KEY_LEFT){
+    else if(KEY_A){
         rocket.x -= rocket.speed; 
     }
 
@@ -263,6 +274,8 @@ function ClearAllIntervals(){
     clearInterval(createInvertedBulletsVar);
     clearInterval(createSpeedBoostVar);
     clearInterval(createAmmoRefillVar);
+    clearInterval(checkMinScoreVar);
+    clearInterval(setMinScoreTimerVar);
 }
 
 function restartGame(){
@@ -274,6 +287,28 @@ function restartGame(){
     rocket.defeated = false;
     resetAmmo();
     GameOverScreen.innerHTML = ``;
+}
+
+function checkMinScore(minscore){
+    if(score < minscore){
+        SetGameOver();
+    }
+    else{
+        minScore += score + 3;
+        document.getElementById('minScore').innerHTML = `${minScore}`;
+    }
+}
+
+function setMinScoreTimer(){
+    if(minScoreTimer != 0)
+    {
+        minScoreTimer--;
+        document.getElementById('minScoreTimer').innerHTML = `${minScoreTimer}`;
+    }
+    else
+    {
+        minScoreTimer = 10;
+    }
 }
 
 function loadImages(){
