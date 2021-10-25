@@ -174,7 +174,7 @@ function update(){
         SetGameOver();              
     }
 
-    if(rocket.defeated){
+    if(rocket.defesdawated){
         rocket.x += 0;
         rocket.y += 0;
     }
@@ -184,19 +184,39 @@ function update(){
     }
 
     else if(KEY_W){
-        rocket.y -= rocket.speed; 
+        if(rocket.y >= 0){
+            rocket.y -= rocket.speed; 
+        }
+        else{
+            KEY_W = false;
+        }
     }
 
     else if(KEY_S){
-        rocket.y += rocket.speed; 
+        if(rocket.y <= 300){
+            rocket.y += rocket.speed; 
+        }
+        else{
+            KEY_S = false;
+        }
     }
 
     else if(KEY_D){
-        rocket.x += rocket.speed; 
+        if(rocket.x <= 500){
+            rocket.x += rocket.speed; 
+        }
+        else{
+            KEY_D = false;
+        }
     }
 
     else if(KEY_A){
-        rocket.x -= rocket.speed; 
+        if(rocket.x >= 0){
+            rocket.x -= rocket.speed; 
+        }
+        else{
+            KEY_A = false;
+        }
     }
 
     bullets.forEach(function(bullet){

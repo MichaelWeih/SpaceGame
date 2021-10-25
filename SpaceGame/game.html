@@ -1,65 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raumschiffschlacht</title>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Raumschiffschlacht</title>
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-    <script src="Javascript/game.js"></script>
-    <script src="Javascript/ufo.js"></script>
-    <script src="Javascript/AmmoRefill.js"></script>
-    <script src="Javascript/bullets.js"></script>
-    <script src="Javascript/rocket.js"></script>
-    <script src="Javascript/speedboost.js"></script>
-    <script src="Javascript/Ammo.js"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+        <script src="Javascript/game.js"></script>
+        <script src="Javascript/ufo.js"></script>
+        <script src="Javascript/AmmoRefill.js"></script>
+        <script src="Javascript/bullets.js"></script>
+        <script src="Javascript/rocket.js"></script>
+        <script src="Javascript/speedboost.js"></script>
+        <script src="Javascript/Ammo.js"></script>
 
-    <style>
-        canvas{
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-    </style>
-</head>
-<body onload="startGame()" style="text-align: center;">
-    <canvas id="canvas" width="600" height="340"></canvas>
+        <style>
+            canvas{
+                background-color: rgba(0, 0, 0, 0.8);
+            }
+        </style>
+    </head>
+    <body onload="startGame()" style="text-align: center;">
+        <canvas id="canvas" width="600" height="340"></canvas>
 
-    <div>
-        <h3>Munition:</h3>
-        <h3 id="ammo"></h3>
-    </div>
+        <div>
+            <h3>Munition:</h3>
+            <h3 id="ammo"></h3>
+        </div>
 
-    <hr>
+        <hr>
 
-    <div class="mdl-textfield--floating-label" id="GameOverScreen">
-        
-    </div>
+        <div class="mdl-textfield--floating-label" id="GameOverScreen">
+            
+        </div>
 
-    <hr>
+        <hr>
 
-    <div>
-        <h1>Score</h1>
-        <h2 id="scoreText"></h1>
-    </div>
+        <div>
+            <h1>Score</h1>
+            <h2 id="scoreText"></h1>
+        </div>
 
-    <div>
-        <h1>Needed Score</h1>
-        <h2 id="minScore"></h1>
-    </div>
+        <div>
+            <h1>Needed Score</h1>
+            <h2 id="minScore"></h1>
+        </div>
 
-    <div>
-        <h1>Timer</h1>
-        <h2 id="minScoreTimer"></h1>
-    </div>
+        <div>
+            <h1>Timer</h1>
+            <h2 id="minScoreTimer"></h1>
+        </div>
 
-    <hr>
+        <hr>
 
-    <h2>Highscore</h2>
-    <div style="text-align: center;">
-        <table id="HighScoreTable" style="margin-left: auto;margin-right: auto;">
-        </table>
-    </div>
-</body>
+        <h2>Highscore</h2>
+        <div style="text-align: center;">
+            <table id="HighScoreTable" style="margin-left: auto;margin-right: auto;">
+            </table>
+        </div>
+    </body>
 </html>
